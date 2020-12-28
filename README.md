@@ -1,2 +1,2 @@
 # cifar
-The CIFAR dataset
+The CIFAR-10 dataset

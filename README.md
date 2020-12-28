@@ -1,6 +1,6 @@
 # cifar
 
-This repo containes the source code for my project for an AI graduate course. The goal of this assignment is to use the keras deep learning package in Python for implementing various artificial neural networks (ANNs) with the CIFAR10 dataset.
+This repo containes the source code for my AI graduate course project. The goal of this assignment is to use the keras deep learning package in Python for implementing various artificial neural networks (ANNs) with the CIFAR10 dataset.
 
 The dataset used here is the CIFAR10 dataset included with Keras [1][2]. The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images. The test batch contains exactly 1000 randomly-selected images from each class. The training batches contain the remaining images in random order, but some training batches may contain more images from one class than another. Between them, the training batches contain exactly 5000 images from each class.
 

@@ -1,0 +1,25 @@
+## root folders
+/css/
+/js/
+/site/
+/static/
+
+## folders
+.git
+dist/
+generated/
+images/
+lib/
+node_modules/
+
+
+## file types
+.gitignore
+*.scss
+
+## specific files
+_config.yml
+asset-manifest.json
+index.html
+manifest.json
+init.js

@@ -12,7 +12,7 @@ Neural networks need to process vectorized and standardized datasets rather than
 
 It is best practice to standardize the columns via feature normalization when using a linear classifier for binary classification. Since the images (X_train, X_test, X_valid) consisted of RGB values in the range 0-255, we can transform them to [0, 1] by dividing by 255. 
 
-The data also appeared to be randomly-selected so I was able to skip that step.
+The data seemed to be randomly-selected so I was able to skip that step.
 
 The class values (y_train, y_test, y_valid) are in the range 0-9, so I applied one-hot encoding to represent each integer value as a binary vector that is all zeros except the index of the orginal class (integer) value (say [0 0 0 0 0 0 0 1 0 0] instead of 8). It turns out the Keras provides some built-in utilities (tensorflow.keras.utils) for handling NumPy arrays as well as other formats. The Keras documentation mentions that is best practice to make data pre-processing part of the machine learning model [3]. However, I am not concerned with portabiliity, so I chose to save the "cleaned" data to disk (`*.npz`) using the NumPy `savez()` function rather than run the pre-processing every time the program executed.
 

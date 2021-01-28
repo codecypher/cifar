@@ -32,11 +32,21 @@ from tensorflow.keras import regularizers
 from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.constraints import max_norm
 from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.layers import Activation, Dense, Dropout, Flatten, BatchNormalization
+from tensorflow.keras.layers import (
+    Activation,
+    Dense,
+    Dropout,
+    Flatten,
+    BatchNormalization,
+)
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.optimizers.schedules import ExponentialDecay, InverseTimeDecay, PolynomialDecay
+from tensorflow.keras.optimizers.schedules import (
+    ExponentialDecay,
+    InverseTimeDecay,
+    PolynomialDecay,
+)
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
@@ -65,27 +75,37 @@ def show_images():
     num_classes = len(np.unique(y_train))
 
     # If using tensorflow, set image dimensions order
-    if K.backend() == 'tensorflow':
+    if K.backend() == "tensorflow":
         K.common.set_image_dim_ordering("th")
 
-    class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
-                   'dog', 'frog', 'horse', 'ship', 'truck']
+    class_names = [
+        "airplane",
+        "automobile",
+        "bird",
+        "cat",
+        "deer",
+        "dog",
+        "frog",
+        "horse",
+        "ship",
+        "truck",
+    ]
 
     fig = plt.figure(figsize=(8, 3))
 
     for i in range(num_classes):
         ax = fig.add_subplot(2, 5, 1 + i, xticks=[], yticks=[])
-        idx = np.where(y_train[:]==i)[0]
-        x_idx = X_train[idx,::]
+        idx = np.where(y_train[:] == i)[0]
+        x_idx = X_train[idx, ::]
         img_num = np.random.randint(x_idx.shape[0])
-        im = np.transpose(x_idx[img_num,::], (1, 2, 0))
+        im = np.transpose(x_idx[img_num, ::], (1, 2, 0))
         ax.set_title(class_names[i])
         plt.imshow(im)
 
     plt.show()
 
 
-def get_elapsed_time(start, end):
+def elapsed_time(start, end):
     """
     Compute elapsed time.
 
@@ -99,10 +119,10 @@ def get_elapsed_time(start, end):
     if diff > 86400:  # day
         days = math.floor(diff / 86400)
         diff = diff - days * 86400
-    if diff > 3600:   # hour
+    if diff > 3600:  # hour
         hours = math.floor(diff / 3600)
         diff = diff - hours * 3600
-    if diff > 60:     # minute
+    if diff > 60:  # minute
         minutes = math.floor(diff / 60)
         diff = diff - minutes * 60
 
@@ -122,7 +142,7 @@ def get_elapsed_time(start, end):
     return s_time
 
 
-def get_timestamp():
+def timestamp():
     """
     Compute timestamp
 
@@ -131,9 +151,9 @@ def get_timestamp():
     # Calling now() function
     today = datetime.now()
 
-    s_timestamp = "{0}{1:02d}{02:02d}-{3:02d}{4:02d}{5:02d}" \
-                    .format(today.year, today.month, today.day,
-                            today.hour, today.minute, today.second)
+    s_timestamp = "{0}{1:02d}{02:02d}-{3:02d}{4:02d}{5:02d}".format(
+        today.year, today.month, today.day, today.hour, today.minute, today.second
+    )
 
     return s_timestamp
 
@@ -151,7 +171,7 @@ def accuracy(test_x, test_y, model):
     predicted_class = np.argmax(result, axis=1)
     true_class = np.argmax(test_y, axis=1)
     num_correct = np.sum(predicted_class == true_class)
-    accuracy = float(num_correct)/result.shape[0]
+    accuracy = float(num_correct) / result.shape[0]
     return accuracy * 100
 
 
@@ -161,46 +181,62 @@ def plot_model_history(model_history):
     @param model_history:
     @return:
     """
-    fig, axs = plt.subplots(1, 2, figsize=(15,5))
+    fig, axs = plt.subplots(1, 2, figsize=(15, 5))
 
     # Summarize history for accuracy
-    axs[0].plot(range(1, len(model_history.history['acc'])+1), model_history.history['acc'])
-    axs[0].plot(range(1, len(model_history.history['val_acc'])+1), model_history.history['val_acc'])
-    axs[0].set_title('Model Accuracy')
-    axs[0].set_ylabel('Accuracy')
-    axs[0].set_xlabel('Epoch')
-    axs[0].set_xticks(np.arange(1,len(model_history.history['acc'])+1), len(model_history.history['acc'])/10)
-    axs[0].legend(['train', 'val'], loc='best')
+    axs[0].plot(
+        range(1, len(model_history.history["acc"]) + 1), model_history.history["acc"]
+    )
+    axs[0].plot(
+        range(1, len(model_history.history["val_acc"]) + 1),
+        model_history.history["val_acc"],
+    )
+    axs[0].set_title("Model Accuracy")
+    axs[0].set_ylabel("Accuracy")
+    axs[0].set_xlabel("Epoch")
+    axs[0].set_xticks(
+        np.arange(1, len(model_history.history["acc"]) + 1),
+        len(model_history.history["acc"]) / 10,
+    )
+    axs[0].legend(["train", "val"], loc="best")
 
     # Summarize history for loss
-    axs[1].plot(range(1, len(model_history.history['loss'])+1), model_history.history['loss'])
-    axs[1].plot(range(1, len(model_history.history['val_loss'])+1), model_history.history['val_loss'])
-    axs[1].set_title('Model Loss')
-    axs[1].set_ylabel('Loss')
-    axs[1].set_xlabel('Epoch')
-    axs[1].set_xticks(np.arange(1, len(model_history.history['loss'])+1), len(model_history.history['loss'])/10)
-    axs[1].legend(['train', 'val'], loc='best')
+    axs[1].plot(
+        range(1, len(model_history.history["loss"]) + 1), model_history.history["loss"]
+    )
+    axs[1].plot(
+        range(1, len(model_history.history["val_loss"]) + 1),
+        model_history.history["val_loss"],
+    )
+    axs[1].set_title("Model Loss")
+    axs[1].set_ylabel("Loss")
+    axs[1].set_xlabel("Epoch")
+    axs[1].set_xticks(
+        np.arange(1, len(model_history.history["loss"]) + 1),
+        len(model_history.history["loss"]) / 10,
+    )
+    axs[1].legend(["train", "val"], loc="best")
 
-    file_name = "model-history-" + get_timestamp() + ".png"
+    file_name = "model-history-" + timestamp() + ".png"
 
     plt.savefig(file_name)  # Save plot to file
     # plt.show()            # Show plot
-    plt.clf()               # Clear current figure
+    plt.clf()  # Clear current figure
     plt.close(fig)
 
 
 def load_data():
     # Load data from file
-    npzfile = np.load('cifar10.npz')
+    npzfile = np.load("cifar10.npz")
     # print(npzfile.files)
 
-    X_train = npzfile['X_train']
-    X_valid = npzfile['X_valid']
-    X_test = npzfile['X_test']
+    X_train = npzfile["X_train"]
+    X_valid = npzfile["X_valid"]
+    X_test = npzfile["X_test"]
 
-    y_train = npzfile['y_train_hot']
-    y_valid = npzfile['y_valid_hot']
-    y_test = npzfile['y_test_hot']
+    y_train = npzfile["y_train_hot"]
+    y_valid = npzfile["y_valid_hot"]
+    y_test = npzfile["y_test_hot"]
 
     num_train, img_channels, img_rows, img_cols = X_train.shape
     num_test, _, _, _ = X_test.shape
@@ -236,9 +272,9 @@ def load_data_linux():
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.5)
 
-    X_train = X_train.astype('float32')
-    X_test = X_test.astype('float32')
-    X_valid = X_valid.astype('float32')
+    X_train = X_train.astype("float32")
+    X_test = X_test.astype("float32")
+    X_valid = X_valid.astype("float32")
 
     # Standardize the columns
     # We need to standardize the columns before we feed them to a linear classifier,
@@ -256,26 +292,26 @@ def load_data_linux():
 
     print(f"\nnum_classes = {y_train_hot.shape[1]}")
 
-    print(X_train.shape[0], 'Train samples')
-    print(X_valid.shape[0], 'Validation samples')
-    print(X_test.shape[0], 'Test samples')
+    print(X_train.shape[0], "Train samples")
+    print(X_valid.shape[0], "Validation samples")
+    print(X_test.shape[0], "Test samples")
 
-    print('\nX_train shape:', X_train.shape)
-    print('X_valid shape:', X_valid.shape)
-    print('X_test shape:', X_test.shape)
+    print("\nX_train shape:", X_train.shape)
+    print("X_valid shape:", X_valid.shape)
+    print("X_test shape:", X_test.shape)
 
-    print('y_train shape:', y_train.shape)
-    print('y_valid shape:', y_valid.shape)
-    print('y_test shape:', y_test.shape)
+    print("y_train shape:", y_train.shape)
+    print("y_valid shape:", y_valid.shape)
+    print("y_test shape:", y_test.shape)
 
-    print('\ny_train_hot shape:', y_train_hot.shape)
-    print('y_valid_hot shape:', y_valid_hot.shape)
-    print('y_test_hot shape:', y_test_hot.shape)
+    print("\ny_train_hot shape:", y_train_hot.shape)
+    print("y_valid_hot shape:", y_valid_hot.shape)
+    print("y_test_hot shape:", y_test_hot.shape)
 
     # Data Sanity Check
     print(f"\nnum_classes = {y_test_hot.shape[1]}")
     print(f"X_test shape: {X_test.shape}")
-    print(f"y_test:\n{y_test[0:10]}")        # Check that dataset has been randomized
+    print(f"y_test:\n{y_test[0:10]}")  # Check that dataset has been randomized
 
     return (X_train, y_train), (X_valid, y_valid), (X_test, y_test)
 
@@ -340,9 +376,9 @@ def preprocess():
     (X_train, y_train), (X_test, y_test) = cifar10.load_data()
     X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=0.5)
 
-    X_train = X_train.astype('float32')
-    X_test = X_test.astype('float32')
-    X_valid = X_valid.astype('float32')
+    X_train = X_train.astype("float32")
+    X_test = X_test.astype("float32")
+    X_valid = X_valid.astype("float32")
 
     # Standardize the columns
     # We need to standardize the columns before we feed them to a linear classifier,
@@ -362,32 +398,40 @@ def preprocess():
 
     print(f"\nnum_classes = {y_train_hot.shape[1]}")
 
-    print(X_train.shape[0], 'Train samples')
-    print(X_valid.shape[0], 'Validation samples')
-    print(X_test.shape[0], 'Test samples')
+    print(X_train.shape[0], "Train samples")
+    print(X_valid.shape[0], "Validation samples")
+    print(X_test.shape[0], "Test samples")
 
-    print('\nX_train shape:', X_train.shape)
-    print('X_valid shape:', X_valid.shape)
-    print('X_test shape:', X_test.shape)
+    print("\nX_train shape:", X_train.shape)
+    print("X_valid shape:", X_valid.shape)
+    print("X_test shape:", X_test.shape)
 
-    print('y_train shape:', y_train.shape)
-    print('y_valid shape:', y_valid.shape)
-    print('y_test shape:', y_test.shape)
+    print("y_train shape:", y_train.shape)
+    print("y_valid shape:", y_valid.shape)
+    print("y_test shape:", y_test.shape)
 
-    print('\ny_train_hot shape:', y_train_hot.shape)
-    print('y_valid_hot shape:', y_valid_hot.shape)
-    print('y_test_hot shape:', y_test_hot.shape)
+    print("\ny_train_hot shape:", y_train_hot.shape)
+    print("y_valid_hot shape:", y_valid_hot.shape)
+    print("y_test_hot shape:", y_test_hot.shape)
 
     # Data Sanity Check
     print(f"\nnum_classes = {y_test_hot.shape[1]}")
     print(f"X_test shape: {X_test.shape}")
-    print(f"y_test:\n{y_test[0:10]}")        # Check that dataset has been randomized
+    print(f"y_test:\n{y_test[0:10]}")  # Check that dataset has been randomized
 
     # Save datasets to file
-    np.savez('cifar10_test.npz',
-             X_train=X_train, X_valid=X_valid, X_test=X_test,
-             y_train=y_train, y_valid=y_valid, y_test=y_test,
-             y_train_hot=y_train_hot, y_valid_hot=y_valid_hot, y_test_hot=y_test_hot)
+    np.savez(
+        "cifar10_test.npz",
+        X_train=X_train,
+        X_valid=X_valid,
+        X_test=X_test,
+        y_train=y_train,
+        y_valid=y_valid,
+        y_test=y_test,
+        y_train_hot=y_train_hot,
+        y_valid_hot=y_valid_hot,
+        y_test_hot=y_test_hot,
+    )
 
 
 def create_model(name, num_classes):
@@ -407,9 +451,9 @@ def create_model(name, num_classes):
     x = Sequential()(inputs)
     x = Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu")(x)
     x = Dropout(0.2)(x)
-    x = Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation="relu")(x)
+    x = Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu")(x)
     x = MaxPooling2D(pool_size=(2, 2))(x)
-    x = Conv2D(filters=32, kernel_size=(3, 3), padding='same', activation="relu")(x)
+    x = Conv2D(filters=32, kernel_size=(3, 3), padding="same", activation="relu")(x)
     x = MaxPooling2D(pool_size=(2, 2))(x)
     x = Flatten()(x)
     x = Dropout(0.2)(x)
@@ -463,16 +507,22 @@ def fit_model(model, X_train, X_valid, y_train, y_valid):
     # Compile the model
     # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['acc'])
     # model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['acc'])
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+    model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["acc"])
 
     # Train the model
     start = time.time()
     # The history object which records what happened over the course of training.
     # The history.history dict contains per-epoch timeseries of metrics values.
-    history = model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
-                        validation_data=(X_valid, y_valid), verbose=1)
+    history = model.fit(
+        X_train,
+        y_train,
+        batch_size=batch_size,
+        epochs=epochs,
+        validation_data=(X_valid, y_valid),
+        verbose=1,
+    )
     end = time.time()
-    print(f"\nModel took [{get_elapsed_time(start, end)}] to train")
+    print(f"\nModel took [{elapsed_time(start, end)}] to train")
 
     # Save the model architecture to disk
     # model_json = model.to_json()
@@ -500,44 +550,50 @@ def data_augment():
     batch_size = 128
 
     # Load data from file
-    npzfile = np.load('cifar10.npz')
+    npzfile = np.load("cifar10.npz")
     print(npzfile.files)
 
-    X_train = npzfile['X_train']
-    X_valid= npzfile['X_valid']
-    y_train = npzfile['y_train_hot']
-    y_valid = npzfile['y_valid_hot']
+    X_train = npzfile["X_train"]
+    X_valid = npzfile["X_valid"]
+    y_train = npzfile["y_train_hot"]
+    y_valid = npzfile["y_valid_hot"]
 
     # Return a compiled model (identical to the previous one)
-    model = load_model('model_cnn_70.h5')
+    model = load_model("model_cnn_70.h5")
 
     datagen = ImageDataGenerator(zoom_range=0.2, horizontal_flip=True)
 
     # Train the model
     start = time.time()
-    model_info = model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size),
-                                     samples_per_epoch=X_train.shape[0], epochs=epochs,
-                                     validation_data=(X_valid, y_valid), verbose=1)
+    model_info = model.fit_generator(
+        datagen.flow(X_train, y_train, batch_size=batch_size),
+        samples_per_epoch=X_train.shape[0],
+        epochs=epochs,
+        validation_data=(X_valid, y_valid),
+        verbose=1,
+    )
     end = time.time()
-    print(f"Model took [{get_elapsed_time(start, end)}] to train (data augmentation)")
+    print(f"Model took [{elapsed_time(start, end)}] to train (data augmentation)")
 
     # Save the model architecture to disk
     # https://keras.io/getting-started/faq/#how-can-i-save-a-keras-model
     model_json = model.to_json()
-    with open('model_cnn_86.json', 'w') as json_file:
+    with open("model_cnn_86.json", "w") as json_file:
         json_file.write(model_json)
 
     # Save the model weights
-    model.save_weights('model_cnn_86.h5')
+    model.save_weights("model_cnn_86.h5")
 
     # Save the whole model (architecture + weights + optimizer state)
-    model.save('model_cnn_86.h5')  # creates a HDF5 file
+    model.save("model_cnn_86.h5")  # creates a HDF5 file
 
     # Plot model history
     plot_model_history(model_info)
 
     # Compute validation accuracy
-    print(f"Accuracy on validation data is: {accuracy(X_valid, y_valid, model): .2f} %0.2f")
+    print(
+        f"Accuracy on validation data is: {accuracy(X_valid, y_valid, model): .2f} %0.2f"
+    )
 
 
 def evaluate_model(model, X_train, X_test, y_train, y_test):
@@ -591,16 +647,29 @@ def main():
     parser = argparse.ArgumentParser(description=msg)
 
     # Add optional arguments
-    parser.add_argument("-i", "--images", dest='images',
-                        action="store_true", help="Show images")
-    parser.add_argument("-p", "--preprocess", dest='preprocess',
-                        action="store_true", help="Preprocess data")
-    parser.add_argument("-c", "--create", dest='create',
-                        action="store_true", help="Create model")
-    parser.add_argument("-a", "--augment", dest='augment',
-                        action="store_true", help="Data augmentation model")
-    parser.add_argument("-e", "--evaluate", dest='evaluate',
-                        action="store_true", help="Evaluate model")
+    parser.add_argument(
+        "-i", "--images", dest="images", action="store_true", help="Show images"
+    )
+    parser.add_argument(
+        "-p",
+        "--preprocess",
+        dest="preprocess",
+        action="store_true",
+        help="Preprocess data",
+    )
+    parser.add_argument(
+        "-c", "--create", dest="create", action="store_true", help="Create model"
+    )
+    parser.add_argument(
+        "-a",
+        "--augment",
+        dest="augment",
+        action="store_true",
+        help="Data augmentation model",
+    )
+    parser.add_argument(
+        "-e", "--evaluate", dest="evaluate", action="store_true", help="Evaluate model"
+    )
 
     # Read arguments from command line
     args = parser.parse_args()

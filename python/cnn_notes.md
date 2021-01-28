@@ -1,5 +1,3 @@
-
-
 # [Convolutional Neural Networks (CNN) for CIFAR-10 Dataset](http://parneetk.github.io/blog/cnn-cifar10/)
 
 
@@ -116,4 +114,3 @@ Below are some tips for getting the most from image data preparation and augment
 - Review Augmentations. Review sample images after the augmentation has been performed. It is one thing to intellectually know what image transforms you are using, it is a very different thing to look at examples. Review images both with individual augmentations you are using as well as the full set of augmentations you plan to use. You may see ways to simplify or further enhance your model training process.
 
 - Evaluate a Suite of Transforms. Try more than one image data preparation and augmentation scheme. Often you can be surprised by results of a data preparation scheme you did not think would be beneficial.
-
